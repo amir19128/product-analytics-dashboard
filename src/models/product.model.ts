@@ -12,4 +12,11 @@ export interface Product {
 export interface ProductsResult {
   products: Product[];
   total: number;
+  skip: number;
+  limit: number;
+}
+
+export interface GetProductsParams {
+  limit?: number;
+  skip?: number;
 }

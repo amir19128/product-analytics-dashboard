@@ -42,6 +42,12 @@ Route UX boundaries:
 - `hooks/useProducts.ts`
   - React Query integration.
   - Manages query key, cache behavior, initial/placeholder data.
+- `hooks/useMonthlySalesSimulation.ts`
+  - Encapsulates simulated monthly sales logic for analytics widget.
+- `mocks/monthly-sales.mock.ts`
+  - Static dataset used by the simulation hook.
+- `types/monthly-sales.types.ts`
+  - Monthly sales type contracts used by simulation and chart.
 - `utils/products-query.ts`
   - Query-specific transformations:
   - build fetch params
@@ -115,8 +121,8 @@ Unit tests (Jest + Testing Library) live under `tests/unit`:
 
 ## Current Tradeoffs and Follow-Ups
 
-- Monthly sales chart uses in-component mock data.
-  - Next step: move to repository/service endpoint and query hook.
+- Monthly sales chart is simulated through a dedicated hook and mock dataset.
+  - Next step: replace simulation hook internals with real repository/service endpoint.
 - Home route (`src/app/page.tsx`) still shows the default starter page.
   - Optional: redirect or replace with dashboard entry.
 - Next build warns about multiple lockfiles in parent directories.

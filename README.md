@@ -122,4 +122,5 @@ Current tests cover:
 ## Notes
 
 - The monthly sales chart uses mock data in `src/features/products/components/MonthlySalesChart.tsx`.
+- The monthly sales chart uses a simulation hook (`src/features/products/hooks/useMonthlySalesSimulation.ts`) and mock dataset (`src/features/products/mocks/monthly-sales.mock.ts`).
 - Product listing page uses server rendering for initial data and client-side querying for interactive filters.

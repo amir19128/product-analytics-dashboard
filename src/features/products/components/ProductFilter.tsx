@@ -50,12 +50,14 @@ export const ProductFilter = memo(function ProductFilter({
   }, [search, debouncedSearch]);
 
   return (
-    <form className="grid grid-cols-1 gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-sm md:grid-cols-3">
+    <div
+      role="search"
+      className="grid grid-cols-1 gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-sm md:grid-cols-3"
+    >
       <input
         type="text"
         placeholder="Search products..."
         aria-label="Search products"
-        disabled={isLoading}
         {...register('search')}
         className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] px-3 py-2.5 text-sm text-[var(--foreground)] shadow-sm outline-none transition focus:ring-2 focus:ring-[var(--accent)]"
       />
@@ -90,6 +92,6 @@ export const ProductFilter = memo(function ProductFilter({
         <option value="title">Sort: Name (A-Z)</option>
         <option value="price">Sort: Price (Low-High)</option>
       </select>
-    </form>
+    </div>
   );
 });

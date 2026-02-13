@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Product Analytics Dashboard
+
+A Next.js App Router project for browsing products, viewing product details, and showing product analytics widgets.
+
+## Tech Stack
+
+- Next.js 16 (App Router, Turbopack)
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- TanStack Query (React Query)
+- React Hook Form
+- Recharts (monthly sales chart)
+- Jest + Testing Library
+
+## Features
+
+- Product listing with pagination
+- Product search, category filtering, and sorting
+- Product detail page with metadata generation
+- Monthly sales chart (currently mock data)
+- Light/dark theme toggle with persisted selection
+- Route-level loading, error, and not-found states
+
+## Project Structure
+
+```text
+src/
+  app/
+    layout.tsx
+    providers.tsx
+    products/
+      page.tsx
+      products-client.tsx
+      [id]/
+        page.tsx
+  features/
+    products/
+      components/
+      hooks/
+      repositories/
+      services/
+      types/
+      utils/
+  lib/
+    api/
+  models/
+  types/
+tests/
+  unit/
+```
+
+For a full architecture breakdown, see `ARCHITECTURE.md`.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20+
+- npm 10+
+
+### Install
+
+```bash
+npm install
+```
+
+### Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build and Run Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev`: start dev server
+- `npm run build`: production build
+- `npm run start`: run built app
+- `npm run lint`: run ESLint
+- `npm run test`: run unit tests
+- `npm run test:watch`: run tests in watch mode
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API Source
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The app fetches product data from DummyJSON:
 
-## Deploy on Vercel
+- Base URL: `https://dummyjson.com`
+- Config: `src/lib/api/apiConfig.ts`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Main endpoints used:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `GET /products`
+- `GET /products/search`
+- `GET /products/category/:category`
+- `GET /products/:id`
+- `GET /products/category-list`
+
+## Testing
+
+Run:
+
+```bash
+npm run test
+```
+
+Current tests cover:
+
+- product service mapping
+- products query utility logic
+- pagination behavior
+- product filter behavior
+
+## Notes
+
+- The monthly sales chart uses mock data in `src/features/products/components/MonthlySalesChart.tsx`.
+- Product listing page uses server rendering for initial data and client-side querying for interactive filters.

@@ -10,6 +10,7 @@ interface ProductFilterProps {
   onCategoryChange?: (category: string) => void;
   onSortChange?: (sortBy: ProductSortOption) => void;
   categories?: string[];
+  isLoading?: boolean;
 }
 
 interface FilterFormValues {
@@ -23,6 +24,7 @@ export const ProductFilter = memo(function ProductFilter({
   onCategoryChange,
   categories = [],
   onSortChange,
+  isLoading = false,
 }: ProductFilterProps) {
   const { register, watch } = useForm<FilterFormValues>({
     defaultValues: {
@@ -53,12 +55,14 @@ export const ProductFilter = memo(function ProductFilter({
         type="text"
         placeholder="Search products..."
         aria-label="Search products"
+        disabled={isLoading}
         {...register('search')}
         className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] px-3 py-2.5 text-sm text-[var(--foreground)] shadow-sm outline-none transition focus:ring-2 focus:ring-[var(--accent)]"
       />
 
       <select
         aria-label="Category"
+        disabled={isLoading}
         {...register('category', {
           onChange: (event: ChangeEvent<HTMLSelectElement>) =>
             onCategoryChange?.(event.target.value),
@@ -75,6 +79,7 @@ export const ProductFilter = memo(function ProductFilter({
 
       <select
         aria-label="Sort"
+        disabled={isLoading}
         {...register('sortBy', {
           onChange: (event: ChangeEvent<HTMLSelectElement>) =>
             onSortChange?.(event.target.value as ProductSortOption),

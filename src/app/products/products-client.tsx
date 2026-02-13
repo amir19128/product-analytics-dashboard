@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useProducts } from '@/features/products/hooks/useProducts';
 import { ProductList } from '@/features/products/components/ProductList';
+import { ProductListSkeleton } from '@/features/products/components/ProductListSkeleton';
 import { ProductFilter } from '@/features/products/components/ProductFilter';
 import { Pagination } from '@/features/products/components/Pagination';
 import { ProductsResult } from '@/models/product.model';
@@ -35,10 +36,12 @@ export default function ProductsClient({ initialProducts, categories }: Props) {
     [limit, page, search, category, sortBy, initialProducts]
   );
 
-  const { data, isLoading, isError, error } = useProducts(queryOptions);
+  const { data, isLoading, isFetching, isError, error } = useProducts(queryOptions);
 
   const products = data?.products ?? [];
   const totalPages = data ? Math.ceil(data.total / limit) : 1;
+  const isInitialLoading = isLoading && !data;
+  const isFilterLoading = isFetching && !isInitialLoading;
 
   const handleSearchChange = useCallback((value: string) => {
     setSearch(value);
@@ -72,18 +75,10 @@ export default function ProductsClient({ initialProducts, categories }: Props) {
           onSearchChange={handleSearchChange}
           onCategoryChange={handleCategoryChange}
           onSortChange={handleSortChange}
+          isLoading={isFetching}
         />
 
-        {isLoading && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 animate-pulse">
-            {Array.from({ length: limit }).map((_, idx) => (
-              <div
-                key={idx}
-                className="h-64 rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)]"
-              />
-            ))}
-          </div>
-        )}
+        {isInitialLoading && <ProductListSkeleton count={limit} />}
 
         {isError && (
           <div className="rounded-xl border border-red-400/40 bg-red-500/10 p-4 text-sm font-semibold text-red-700">
@@ -91,13 +86,23 @@ export default function ProductsClient({ initialProducts, categories }: Props) {
           </div>
         )}
 
-        {!isLoading && products.length === 0 && (
+        {isFilterLoading && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--border)] border-t-[var(--accent)]" />
+              <span>Updating products...</span>
+            </div>
+            <ProductListSkeleton count={limit} />
+          </div>
+        )}
+
+        {!isInitialLoading && !isFilterLoading && products.length === 0 && (
           <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-8 text-center text-[var(--muted-foreground)]">
             No products found.
           </div>
         )}
 
-        {!isLoading && products.length > 0 && (
+        {!isInitialLoading && !isFilterLoading && products.length > 0 && (
           <>
             <ProductList products={products} />
             <Pagination

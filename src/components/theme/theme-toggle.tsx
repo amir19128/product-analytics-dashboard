@@ -12,7 +12,7 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       title={isDark ? 'Light mode' : 'Dark mode'}
-      className="relative inline-flex h-9 w-16 items-center rounded-full border border-[var(--border)] bg-[var(--surface)] p-1 shadow-sm transition"
+      className="relative inline-flex h-8 w-14 items-center rounded-full border border-[var(--border)] bg-[var(--surface)] p-1 shadow-sm transition"
     >
       <span className="pointer-events-none absolute left-2 text-amber-500">
         <svg
@@ -21,7 +21,7 @@ export function ThemeToggle() {
           fill="none"
           stroke="currentColor"
           strokeWidth="1.8"
-          className="h-4 w-4"
+          className="h-3.5 w-3.5"
           aria-hidden="true"
         >
           <circle cx="12" cy="12" r="4" />
@@ -36,7 +36,7 @@ export function ThemeToggle() {
           fill="none"
           stroke="currentColor"
           strokeWidth="1.8"
-          className="h-4 w-4"
+          className="h-3.5 w-3.5"
           aria-hidden="true"
         >
           <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
@@ -44,8 +44,8 @@ export function ThemeToggle() {
       </span>
 
       <span
-        className={`absolute top-1 h-7 w-7 rounded-full bg-[var(--accent)] shadow transition-transform duration-300 ${
-          isDark ? 'translate-x-7' : 'translate-x-0'
+        className={`absolute top-1 h-6 w-6 rounded-full bg-[var(--accent)] shadow transition-transform duration-300 ${
+          isDark ? 'translate-x-6' : 'translate-x-0'
         }`}
       />
     </button>

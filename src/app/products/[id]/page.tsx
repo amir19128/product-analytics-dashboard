@@ -11,46 +11,46 @@ interface PageProps {
 const productService = new ProductService();
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { id } = await params;
-  const productId = Number(id);
+    const { id } = await params;
+    const productId = Number(id);
 
-  if (isNaN(productId)) {
-    return { title: 'Product Not Found' };
-  }
+    if (isNaN(productId)) {
+        return { title: 'Product Not Found' };
+    }
 
-  try {
+    try {
         const product = await productService.getProductById(productId);
         return {
             title: `${product.title} | Product Details`,
-      description: product.description,
-    };
-  } catch (error) {
-    if (error instanceof HttpError && error.status === 404) {
-      return { title: 'Product Not Found' };
-    }
+            description: product.description,
+        };
+    } catch (error) {
+        if (error instanceof HttpError && error.status === 404) {
+            return { title: 'Product Not Found' };
+        }
 
-    return { title: 'Product Not Found' };
-  }
+        return { title: 'Product Not Found' };
+    }
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
-  const { id } = await params;
-  const productId = Number(id);
+    const { id } = await params;
+    const productId = Number(id);
 
     if (isNaN(productId)) {
         notFound();
     }
-  let product;
+    let product;
 
-  try {
-    product = await productService.getProductById(productId);
-  } catch (error) {
-    if (error instanceof HttpError && error.status === 404) {
-      notFound();
+    try {
+        product = await productService.getProductById(productId);
+    } catch (error) {
+        if (error instanceof HttpError && error.status === 404) {
+            notFound();
+        }
+
+        throw error;
     }
-
-    throw error;
-  }
 
     if (!product) {
         notFound();

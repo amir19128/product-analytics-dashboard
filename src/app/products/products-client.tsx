@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
+import { useProducts } from '@/features/products/hooks/useProducts';
 import { ProductList } from '@/features/products/components/ProductList';
 import { ProductFilter } from '@/features/products/components/ProductFilter';
 import { Pagination } from '@/features/products/components/Pagination';
@@ -12,53 +13,47 @@ interface Props {
   categories: string[];
 }
 
-const PAGE_SIZE = 9;
-
 export default function ProductsClient({ initialProducts, categories }: Props) {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [sortBy, setSortBy] = useState<ProductSortOption>('');
   const [page, setPage] = useState(1);
+  const limit = 9;
 
-  const normalizedSearch = search.trim().toLowerCase();
-  let processedProducts = initialProducts.products.filter((product) => {
-    const matchSearch =
-      normalizedSearch.length === 0 ||
-      product.title.toLowerCase().includes(normalizedSearch) ||
-      product.description.toLowerCase().includes(normalizedSearch);
-    const matchCategory = category.length === 0 || product.category === category;
-    return matchSearch && matchCategory;
-  });
+  const queryOptions = useMemo(
+    () => ({
+      limit,
+      skip: (page - 1) * limit,
+      search,
+      category,
+      sortBy: sortBy || undefined,
+      initialData:
+        page === 1 && !search && !category && !sortBy
+          ? initialProducts
+          : undefined,
+    }),
+    [limit, page, search, category, sortBy, initialProducts]
+  );
 
-  if (sortBy === 'title') {
-    processedProducts = [...processedProducts].sort((a, b) =>
-      a.title.localeCompare(b.title)
-    );
-  }
+  const { data, isLoading, isError, error } = useProducts(queryOptions);
 
-  if (sortBy === 'price') {
-    processedProducts = [...processedProducts].sort((a, b) => a.price - b.price);
-  }
+  const products = data?.products ?? [];
+  const totalPages = data ? Math.ceil(data.total / limit) : 1;
 
-  const totalPages = Math.max(1, Math.ceil(processedProducts.length / PAGE_SIZE));
-  const safePage = Math.min(page, totalPages);
-  const start = (safePage - 1) * PAGE_SIZE;
-  const products = processedProducts.slice(start, start + PAGE_SIZE);
-
-  const handleSearchChange = (value: string) => {
+  const handleSearchChange = useCallback((value: string) => {
     setSearch(value);
     setPage(1);
-  };
+  }, []);
 
-  const handleCategoryChange = (value: string) => {
+  const handleCategoryChange = useCallback((value: string) => {
     setCategory(value);
     setPage(1);
-  };
+  }, []);
 
-  const handleSortChange = (value: ProductSortOption) => {
+  const handleSortChange = useCallback((value: ProductSortOption) => {
     setSortBy(value);
     setPage(1);
-  };
+  }, []);
 
   return (
     <main className="mx-auto max-w-7xl p-4 md:p-6">
@@ -74,25 +69,39 @@ export default function ProductsClient({ initialProducts, categories }: Props) {
       <section className="space-y-6">
         <ProductFilter
           categories={categories}
-          search={search}
-          category={category}
-          sortBy={sortBy}
           onSearchChange={handleSearchChange}
           onCategoryChange={handleCategoryChange}
           onSortChange={handleSortChange}
         />
 
-        {products.length === 0 && (
+        {isLoading && (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 animate-pulse">
+            {Array.from({ length: limit }).map((_, idx) => (
+              <div
+                key={idx}
+                className="h-64 rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)]"
+              />
+            ))}
+          </div>
+        )}
+
+        {isError && (
+          <div className="rounded-xl border border-red-400/40 bg-red-500/10 p-4 text-sm font-semibold text-red-700">
+            {error?.message || 'Error loading products.'}
+          </div>
+        )}
+
+        {!isLoading && products.length === 0 && (
           <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-8 text-center text-[var(--muted-foreground)]">
             No products found.
           </div>
         )}
 
-        {products.length > 0 && (
+        {!isLoading && products.length > 0 && (
           <>
             <ProductList products={products} />
             <Pagination
-              currentPage={safePage}
+              currentPage={page}
               totalPages={totalPages}
               onPageChange={setPage}
             />

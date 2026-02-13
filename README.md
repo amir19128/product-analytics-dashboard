@@ -15,6 +15,7 @@ A Next.js App Router project for browsing products, viewing product details, and
 
 ## Features
 
+- Root route redirects to `/products`
 - Product listing with pagination
 - Product search, category filtering, and sorting
 - Product detail page with metadata generation
@@ -121,6 +122,5 @@ Current tests cover:
 
 ## Notes
 
-- The monthly sales chart uses mock data in `src/features/products/components/MonthlySalesChart.tsx`.
 - The monthly sales chart uses a simulation hook (`src/features/products/hooks/useMonthlySalesSimulation.ts`) and mock dataset (`src/features/products/mocks/monthly-sales.mock.ts`).
 - Product listing page uses server rendering for initial data and client-side querying for interactive filters.

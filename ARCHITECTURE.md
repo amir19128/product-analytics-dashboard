@@ -123,7 +123,6 @@ Unit tests (Jest + Testing Library) live under `tests/unit`:
 
 - Monthly sales chart is simulated through a dedicated hook and mock dataset.
   - Next step: replace simulation hook internals with real repository/service endpoint.
-- Home route (`src/app/page.tsx`) still shows the default starter page.
-  - Optional: redirect or replace with dashboard entry.
+- Home route (`src/app/page.tsx`) redirects to `/products`.
 - Next build warns about multiple lockfiles in parent directories.
   - Optional: configure `turbopack.root` or remove extra lockfile.
